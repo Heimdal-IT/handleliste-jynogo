@@ -1,39 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Document</title>
-</head>
-<body>
-   <div id="liste"></div>
+    <head>
+        <meta charset="UTF-8">
+        <title>Handleliste</title>
+        <link rel="icon" href="bilder/sparIcon.png">
+        <link rel="stylesheet" type="text/css" href="handleliste1.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
     
-</body>
+    <body>
+        <div class="container">
+            <div class="header text-center">
+                <h1>Handleliste</h1>
+            </div>
+            <div class="row">
+                <div class="listInput col-md-5 col-sm-12">
+                    <div id="inputArea">
+                        <input id="userInput" type="text" placeholder="Legg til vare...">
+                        <button id="add" class="custBtn"><i class="fa fa-check"></i></button>
+                    </div>
+                </div>
+                <div class="mainList col-md-7 col-sm-12">
+                    <ul>
+                        <h2 class="empty text-center">Tom liste...</h2>
+                    </ul>
+                </div>
+          </div>
+        </div>
+        
+        <p id="creds">Laget av: Johnny Ngo Nguyen</p>
+    </body>
+    
+    <script>
+        var addBtn = document.getElementById('add');
+        var input = document.getElementById('userInput');
+        var ul = document.getElementsByTagName('ul')[0];
 
-<script>
-    let handleliste = ["Epler", "Appelsiner", "Sjokolade", "Sjokomelk"];
-    handleliste[4] = "Skinke";
-    handleliste.push("Smør");
-    handleliste[3] = "Litago jordbær";
-    
-    handleliste.pop();
-    
-    console.log(handleliste.indexOf("Vaskemiddel"));
-    
-    
+        //Sjekker lengden av det som blir skrevet i "input"
+        function addItemLength() {
+          return document.getElementById('userInput').value.length;
+        }
+        //Sjekker hvor mange liste elementer som finnes
+        function checkLis(){
+          return document.getElementsByTagName('li').length;
+        }
+        //Lager en ny liste
+        function createListItem() {
+          var li = document.createElement('li');
+          li.classList.add('listItem');
+          li.append(document.createTextNode(input.value));
+          li.addEventListener('click', toggleDone);
+          ul.appendChild(li);
+          input.value = "";
 
-    /*
+          //Fjern vare knapp som blir pushet når en vare er blitt skrevet
+          var delBtn = document.createElement('button');
+          var delX = document.createElement('i');
+          delX.classList.add('fas', 'fa-times');
+          delBtn.classList.add('custBtn');
+          delBtn.appendChild(delX);
+          delBtn.addEventListener('click', delItem);
+          li.append(delBtn);
 
-    */
-    
-    let listeDiv = document.getElementById("liste");
-    
-        for(let i = 0; i<handleliste.length; i++){
-            
-            listeDiv.innerHTML += handleliste[i] + "<br>";
-    }
- 
-    
-    
-</script>
+          //Skjuler "tom liste" tekst hvis det er blitt lagd en liste
+          if(checkLis() > 0) {
+            var emptyList = document.querySelector('h2');
+            emptyList.style.display = "none";
+          }
 
+          //Linje som går gjennom tekst ved klikk
+          function toggleDone() {
+            li.classList.toggle('done');
+          }
+
+          //Fjern vare
+          function delItem() {
+            li.remove();
+            if(checkLis() == 0) {
+              var emptyList = document.querySelector('h2');
+              emptyList.style.display = "block";
+            }
+
+          }
+        }
+
+        //onClick knapp
+        function addClick() {
+          if(addItemLength() > 0) {
+            createListItem();
+          }
+        }
+
+        //Mulig å trykke på enter istedenfor å trykke på legg til vare
+        function addKey(event) {
+          if(addItemLength() > 0 && event.keyCode == 13) {
+            createListItem();
+          }
+        }
+        addBtn.addEventListener('click', addClick);
+        input.addEventListener('keypress', addKey);    
+        
+    </script>
+    
 </html>
